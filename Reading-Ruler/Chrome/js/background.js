@@ -1,3 +1,4 @@
+
 var background = {
 
     core: {},
@@ -10,7 +11,11 @@ var background = {
                 background.core = port;
                 background.core.postMessage({settings: background.settings});
             }
-        });
+
+            background.core.onMessage.addListener(function(msg) {
+                chrome.browserAction.setBadgeText({text: msg.text});
+            });
+        });        
 
         chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
             if (request.method in background) {

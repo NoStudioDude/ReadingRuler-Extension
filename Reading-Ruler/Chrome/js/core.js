@@ -96,10 +96,12 @@ var core = {
 
         vis = !vis;
         core.bar.style.display = vis ? "block" : "none";
-
         core.conf.visible = vis;
-    }
 
+        var badgeText = vis ? "on" : "";
+
+        core.port.postMessage({text: badgeText});
+    }
 };
 
 document.addEventListener('mousemove', function (ev) {
