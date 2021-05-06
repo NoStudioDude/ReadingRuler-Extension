@@ -5,9 +5,11 @@
     "description": "A reading aid for pages with wiiiiiiide paragraphs.",
     "version": "2.2",
 
-    "icons": {
-        "512": "512.png"
-    },
+    "icons": [
+        {
+            "src": "512.png"
+        }
+    ],
 
     "background": { 
         "scripts": ["js/background.js"] 
