@@ -1,56 +1,67 @@
+// Variables
+let core = {};
+let localCacheStorage = {};
 
-var background = {
+// On chrome extension Install/Update
+chrome.runtime.onInstalled.addListener(function(details){
+    var thisVersion = chrome.runtime.getManifest().version;
 
-    core: {},
+    if(details.reason == "install" || (details.reason == "update" && thisVersion === '3.0')) {
+        let storage = {
+            useCTRL: true,
+            useSHIFT: false,
+            useKEY: 'y',
+            isActive: false,
+            colour: "#55cc551c",
+            lineColour: "#33aa3334", // colour of the bottom edge of the bar
+            scale: 1.05, // how many times the text's line-height should the bar's height be
+            shadow: 0.08, // opacity of the bar's shadow (0 to 1)
+        };
+        
+        chrome.storage.local.set({'settings': storage}, function() {});
 
-    settings: {},
-
-    init: function () {
-        chrome.runtime.onConnect.addListener(function(port) {
-            if(port.name == "core"){
-                background.core = port;
-                background.core.postMessage({settings: background.settings});
-            }
-
-            background.core.onMessage.addListener(function(msg) {
-                chrome.browserAction.setBadgeText({text: msg.text});
-            });
-        });        
-
-        chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-            if (request.method in background) {
-                background[request.method](request, sender, sendResponse);
-            }
-        });
-
-        if (!localStorage.isInitialized) {
-
-            localStorage.useCTRL = true;
-            localStorage.useALT = false;
-            localStorage.useSHIFT = false;
-            localStorage.useKEY = 'y';
-
-            localStorage.isInitialized = true;
-        }
-
-        background.settings = localStorage;
-    },
-
-    getLocalStorage: function (request, sender, sendResponse) {
-        sendResponse(background.settings);
-    },
-
-    updateLocalStorage: function (request, sender, sendResponse) {
-        localStorage.useCTRL = request.extra.useCTRL;
-        localStorage.useALT = request.extra.useALT;
-        localStorage.useSHIFT = request.extra.useSHIFT;
-        localStorage.useKEY = request.extra.useKEY;
-
-        background.settings = localStorage;
-        background.core.postMessage({settings: background.settings});
+    } else if(details.reason == "update") {
+        // console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");
     }
 
+    this.initializeStrorage();
+});
+
+// Listener events
+chrome.runtime.onConnect.addListener(function(port) {
+    if(port.name == "core"){
+        core = port;
+        port.postMessage({settings: localCacheStorage});
+    }
+});        
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    if (request.method in this) {
+        this[request.method](request, sender, sendResponse);
+    }
+});
+
+// Background functions
+function initializeStrorage() {
+    chrome.storage.local.get('settings', function(result) {
+        if(result) {
+            localCacheStorage = result.settings;
+        } else {
+            console.error('no settings in store');
+        }
+    })
 };
 
-// startup
-background.init();
+function getLocalStorage(request, sender, sendResponse) {
+    sendResponse(localCacheStorage);
+};
+
+function updateLocalStorage(request, sender, sendResponse) {
+    localCacheStorage.useCTRL = request.extra.useCTRL;
+    localCacheStorage.useSHIFT = request.extra.useSHIFT;
+    localCacheStorage.useKEY = request.extra.useKEY;
+    localCacheStorage.isActive = request.extra.isActive;
+
+    chrome.storage.local.set({'settings': localCacheStorage}, function() {});
+    core.postMessage({settings: localCacheStorage});
+};

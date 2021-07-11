@@ -1,5 +1,3 @@
-var console = chrome.extension.getBackgroundPage().console;
-
 var app = {
 
     settings: {},
@@ -7,16 +5,19 @@ var app = {
     init: function() {
         var inputKey = document.getElementById("inputKEY");
         var chkCTRL = document.getElementById("chkCTRL");
-        var chkALT = document.getElementById("chkALT");
         var chkSHIFT = document.getElementById("chkSHIFT");
 
-        chrome.runtime.sendMessage({method: "getLocalStorage"}, function(response){
-            app.settings = response;
-            
-            inputKey.value = app.settings.useKEY;
-            chkCTRL.checked = JSON.parse(app.settings.useCTRL);
-            chkALT.checked = JSON.parse(app.settings.useALT);
-            chkSHIFT.checked = JSON.parse(app.settings.useSHIFT);
+        chrome.storage.local.get('settings', function(result) {
+            if(result) {
+                app.settings = result.settings;
+
+                inputKey.value = app.settings.useKEY;
+                chkCTRL.checked = app.settings.useCTRL;
+                chkSHIFT.checked = app.settings.useSHIFT;
+
+            } else {
+                console.error('no settings in store');
+            }
         });
 
         inputKey.addEventListener('keydown', function(ev){
@@ -28,12 +29,6 @@ var app = {
 
         chkCTRL.addEventListener('change', function(ev){
             app.settings.useCTRL = ev.target.checked;
-            
-            chrome.runtime.sendMessage({method: "updateLocalStorage", extra: app.settings});
-        });
-
-        chkALT.addEventListener('change', function(ev){
-            app.settings.useALT = ev.target.checked;
             
             chrome.runtime.sendMessage({method: "updateLocalStorage", extra: app.settings});
         });
