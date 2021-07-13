@@ -1,6 +1,6 @@
 // Variables
 let bar = undefined;
-let port = chrome.runtime.connect({ name: "core" });
+let port = chrome.runtime.connect({ name: "core" });;
 let localCacheStorage = {};
 
 // 999 = selected keyboard key
@@ -8,17 +8,25 @@ let keyMap = { Shift: undefined, Control: undefined, 999: undefined };
 let currentKeyMap = { Shift: undefined, Control: undefined, 999: undefined };
 
 // Event Listeners
-port.onMessage.addListener(function (msg) {
-    localCacheStorage = msg.settings;
-    if(!bar)
-    {
-        createBar();
-    }
+function isValidChromeRuntime() {
+    return chrome.runtime && !!chrome.runtime.getManifest();
+}
 
-    keyMap["Control"] = localCacheStorage.useCTRL;
-    keyMap["Shift"] = localCacheStorage.useSHIFT;
-    keyMap[999] = localCacheStorage.useKEY;
-});
+if(isValidChromeRuntime())
+{
+    port.onMessage.addListener(function (msg) {
+        localCacheStorage = msg.settings;
+        if(!bar)
+        {
+            createBar();
+        }
+    
+        keyMap["Control"] = localCacheStorage.useCTRL;
+        keyMap["Shift"] = localCacheStorage.useSHIFT;
+        keyMap[999] = localCacheStorage.useKEY;
+    });
+}
+
 
 document.addEventListener('mousemove', function (ev) {
     if(localCacheStorage.isActive) {
@@ -69,7 +77,7 @@ function createBar() {
     bar.style.display = "none";
     bar.style.pointerEvents = "none";
     bar.style.transition = "120ms height";
-    bar.style.zIndex = 9999999;
+    bar.style.zIndex = 2147483647;
     bar.style.backgroundColor = localCacheStorage.colour;
     bar.style.borderBottom = localCacheStorage.lineColour ? `1px ${localCacheStorage.lineColour} solid` : void 0;
     bar.style.boxShadow = `0 1px 4px rgba(0, 0, 0, ${localCacheStorage.shadow})`;
@@ -85,5 +93,9 @@ function toggle() {
     var badgeText = vis ? "on" : "";
 
     // chrome.browserAction.setBadgeText({text: badgeText});
-    chrome.runtime.sendMessage({method: "updateLocalStorage", extra: localCacheStorage});
+    if(isValidChromeRuntime())
+    {
+        chrome.runtime.sendMessage({method: "updateLocalStorage", extra: localCacheStorage});
+    }
+    
 }
