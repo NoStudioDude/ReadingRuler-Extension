@@ -2,150 +2,72 @@
     <title></title>
     <meta charset="utf-8" />
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="../css/bootstrap2-toggle.min.css" rel="stylesheet">
-
-    <style>
-        body {
-            font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
-            font-size: 100%;
-            background: #FFFFFF;
-            width: 250px;
-        }
-
-        tr {
-            white-space: nowrap;
-        }
-
-        .results {
-            text-align: right;
-            min-width: 6em;
-            color: black;
-        }
-
-        .wrapper {
-            padding: 10px;
-        }
-
-        #inputTU {
-            resize: none;
-        }
-
-        li {
-            padding-right: 12px;
-            padding-bottom: 5px;
-            font-size: 15px;
-            color: black;
-        }
-
-        li a {
-            color: black;
-        }
-
-        /* The switch - the box around the slider */
-
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 34px;
-        }
-
-        /* Hide default HTML checkbox */
-
-        .switch input {
-            display: none;
-        }
-
-        /* The slider */
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            -webkit-transition: .4s;
-            transition: .4s;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 26px;
-            width: 26px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            -webkit-transition: .4s;
-            transition: .4s;
-        }
-
-        input:checked+.slider {
-            background-color: #2196F3;
-        }
-
-        input:focus+.slider {
-            box-shadow: 0 0 1px #2196F3;
-        }
-
-        input:checked+.slider:before {
-            -webkit-transform: translateX(26px);
-            -ms-transform: translateX(26px);
-            transform: translateX(26px);
-        }
-
-        /* Rounded sliders */
-
-        .slider.round {
-            border-radius: 34px;
-        }
-
-        .slider.round:before {
-            border-radius: 50%;
-        }
-    </style>
-
+    <link href="../css/popup.css" rel="stylesheet">
+    
     <script src="../js/jquery-3.3.1.min.js"></script>
     <script src="../js/bootstrap2-toggle.min.js"></script>
-    <script src="../js/popup.js"></script>
 </head>
 
 <body>
-    <div class="wrapper">
-        <div class="d-flex">
-            <div>
-                Reading Ruler Settings
+
+    <h5 class="title">Reading Ruler Settings</h5>
+
+    <div class="container">
+        <div class="container-text">Use CTRL</div>
+        <div class="container-switch">
+            <label class="switch">
+                <input type="checkbox" id="chkCTRL">
+                <div class="slider round"></div>
+            </label>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="container-text">Use SHIFT</div>
+        <div class="container-switch">
+            <label class="switch">
+                <input type="checkbox" id="chkSHIFT">
+                <div class="slider round"></div>
+            </label>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="container-text">Color</div>
+        <div class="container-switch">
+            <input type="color" id="color-picker-input" class="field-radio" >           
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="container-text">Opacity</div>
+        <div class="container-switch">
+            <input type="range" id="rule-opacity" min="0" max="1" step="0.1">
+        </div>
+    </div>
+        
+    <div class="container">
+        <div class="container-text">Input Key</div>
+        <div class="container-switch">
+            <div class="text-input">
+                <input type="text" id="inputKEY" class="form-control" readonly>
             </div>
         </div>
-        <table>
-            <tr>
-                <td>Use CTRL</td>
-                <td id="resultsRequest" class="results">
-                    <label class="switch">
-                        <input class="chk" id="chkCTRL" type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                </td>
-            </tr>
-            <tr>
-                <td>Use SHIFT</td>
-                <td id="resultsRequest" class="results">
-                    <label class="switch">
-                        <input class="chk" id="chkSHIFT" type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                </td>
-            </tr>
-            <tr>
-                <td>Key</td>
-                <td id="resultsConnect" class="results">
-                    <input type="text" id="inputKEY" class="form-control" readonly>
-                </td>
-            </tr>
-        </table>
+    </div>
+
+    <div class="container-buymeacoffe">
+        <a href="https://ko-fi.com/nostudiodude" class="link-buymeacoffe" target="_black" rel="noopener noreferrer">
+            <div class="btn-buymeacoffee">
+                <svg width="17" height="24" viewBox="0 0 17 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3.0195 0.00075L1.80525 2.802H0V5.32125H0.69075L1.398 9.8025H0.29325L1.75425 18.0322L2.691 18.021L3.633 24.0007H12.5513L12.6135 23.6025L13.4925 18.0202L14.3835 18.0315L15.8407 9.80175H14.7855L15.4883 5.3205H16.2465V2.80125H14.3287L13.11 0L3.0195 0.00075ZM3.5475 0.8055H12.5903L13.359 2.58675H2.77275L3.5475 0.8055ZM0.798 3.603H15.4418V4.524H0.798V3.603ZM1.251 10.6027H14.8883L13.7123 17.22L8.06025 17.1607L2.427 17.22L1.251 10.6027Z" fill="currentColor"></path>
+                </svg>
+                <span>Buy me a coffee</span>
+            </div>
+        </a>        
     </div>
 </body>
