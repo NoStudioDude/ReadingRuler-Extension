@@ -22,6 +22,11 @@ body {
     height: 50px;
 }
 
+.center {
+    margin: auto;
+    width: 60%;
+}
+
 .link-buymeacoffe {
     position: relative;
     align-items: center;
@@ -50,6 +55,11 @@ body {
     flex-direction: row;
 }
 
+.span-buymeacoffee {
+    padding: 2px;
+    margin-left: 10px;
+}
+
 a:link, a:hover {
     text-decoration: none!important;
     color: white;
@@ -68,6 +78,7 @@ a:link, a:hover {
 #color-picker-input::-webkit-color-swatch-wrapper {
     padding: 0; 
 }
+
 #color-picker-input::-webkit-color-swatch {
     border: none;
     border-radius: 100%;

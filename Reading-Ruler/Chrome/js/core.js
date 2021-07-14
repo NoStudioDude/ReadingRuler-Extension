@@ -2,6 +2,8 @@
 let bar = undefined;
 let port = chrome.runtime.connect({ name: "core" });;
 let localCacheStorage = {};
+let isInitialized = false;
+let isActive = false;
 
 // 999 = selected keyboard key
 let keyMap = { Shift: undefined, Control: undefined, 999: undefined };
@@ -15,7 +17,14 @@ document.addEventListener('keyup', onKeyUp);
 // Event Listeners
 
 try {
-    port.onMessage.addListener(function () { });
+    port.onMessage.addListener(function (msg) {        
+        if(isInitialized)
+        {
+            localCacheStorage = msg.settings;
+            applyKeyMapping();
+            applyBarStyle();
+        }        
+    });
 } catch (e) {
     unregisterSelf();
 }
@@ -27,6 +36,12 @@ function initializeComponents() {
         createBar();
     }
 
+    applyKeyMapping();
+    isInitialized = true;
+}
+
+function applyKeyMapping()
+{
     keyMap["Control"] = localCacheStorage.useCTRL;
     keyMap["Shift"] = localCacheStorage.useSHIFT;
     keyMap[999] = localCacheStorage.useKEY;
@@ -46,7 +61,7 @@ function initializeSettings()
 
 // Event Handler methods
 function onMouseMove(ev) {
-    if(localCacheStorage.isActive) {
+    if(isActive) {
         var scrollTop = (window.pageYOffset !== undefined) 
             ? window.pageYOffset 
             : (document.documentElement || document.body.parentNode || document.body).scrollTop;
@@ -128,9 +143,8 @@ function hexToRgb(hex) {
   }
 
 function toggle() {
-    var vis = !localCacheStorage.isActive;
-    localCacheStorage.isActive = vis;
-
+    isActive = !isActive;
+       
     // Get reference to current bar
     // If we dont find it we create it again
     var activeBar = document.getElementById("reader-ruler");
@@ -140,15 +154,10 @@ function toggle() {
         createBar();
     }
     
-    bar.style.display = vis ? "block" : "none";
+    bar.style.display = isActive ? "block" : "none";
     
     // var badgeText = vis ? "on" : "";
     // chrome.browserAction.setBadgeText({text: badgeText});
-    try {
-        chrome.runtime.sendMessage({method: "updateLocalStorage", extra: localCacheStorage});
-    } catch (e) {
-        unregisterSelf();
-    }
 }
 
 // Initialize Core

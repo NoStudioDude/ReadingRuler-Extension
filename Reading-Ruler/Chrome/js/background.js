@@ -11,7 +11,6 @@ chrome.runtime.onInstalled.addListener(function(details){
             useCTRL: true,
             useSHIFT: false,
             useKEY: 'y',
-            isActive: false,
             colour: "#8cfc03",
             lineColour: "#33aa3334", // colour of the bottom edge of the bar
             scale: 1.05, // how many times the text's line-height should the bar's height be
@@ -60,7 +59,6 @@ function updateLocalStorage(request, sender, sendResponse) {
     localCacheStorage.useCTRL = request.extra.useCTRL;
     localCacheStorage.useSHIFT = request.extra.useSHIFT;
     localCacheStorage.useKEY = request.extra.useKEY;
-    localCacheStorage.isActive = request.extra.isActive;
     localCacheStorage.colour = request.extra.colour;
     localCacheStorage.shadow = request.extra.shadow;
 
