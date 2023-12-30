@@ -1,34 +1,41 @@
 {
     "manifest_version": 3,
-
     "name": "ReadingRuler",
     "description": "A reading aid for pages with wiiiiiiide paragraphs.",
-    "version": "3.1",
-
-    "icons": 
-    { 
+    "version": "4.0",
+    "icons": {
         "512": "512.png"
     },
-
-    "background": { 
-        "service_worker": "background-loader.js" 
+    "commands": {
+        "ruler": {
+            "suggested_key": {
+                "default": "Alt+Shift+3",
+                "mac": "Command+Shift+U"
+            },
+            "description": "Toggles a reading aid for pages with wiiiiiiide paragraphs."
+        }
     },
-
+    "background": {
+        "service_worker": "background.js"
+    },
     "action": {
         "default_popup": "popup/popup.html",
         "default_icon": "512.png"
     },
-
     "content_scripts": [
         {
-            "matches": [ "http://*/*", "https://*/*" ],
-            "js": [ "js/core.js" ],
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "js/content.js"
+            ],
             "run_at": "document_end",
             "all_frames": true
         }
     ],
-
     "permissions": [
-        "storage"
+        "storage",
+        "activeTab"
     ]
 }

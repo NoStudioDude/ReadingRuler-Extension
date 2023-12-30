@@ -2,20 +2,16 @@ var app = {
 
     settings: {},
 
-    init: function() {
-        var inputKey = document.getElementById("inputKEY");
-        var chkCTRL = document.getElementById("chkCTRL");
-        var chkSHIFT = document.getElementById("chkSHIFT");
+    init: function () {
         var color = document.getElementById("color-picker-input");
         var opacity = document.getElementById("rule-opacity");
+        var btnSave = document.getElementById("btnSave");
 
-        chrome.storage.local.get('settings', function(result) {
-            if(result) {
+        chrome.storage.local.get('settings', function (result) {
+            console.log("load settings in popup");
+            if (result) {
+                console.log(result);
                 app.settings = result.settings;
-
-                inputKey.value = app.settings.useKEY;
-                chkCTRL.checked = app.settings.useCTRL;
-                chkSHIFT.checked = app.settings.useSHIFT;
                 color.value = app.settings.colour;
                 opacity.value = app.settings.shadow;
 
@@ -24,39 +20,21 @@ var app = {
             }
         });
 
-        inputKey.addEventListener('keydown', function(ev){
-            app.settings.useKEY = ev.key;
-            inputKey.value = ev.key;
-
-            chrome.runtime.sendMessage({method: "updateLocalStorage", extra: app.settings});
+        btnSave.addEventListener('click', function (ev) {
+            console.log(app.settings);
+            chrome.runtime.sendMessage({ method: "updateLocalStorage", extra: app.settings });
         });
 
-        chkCTRL.addEventListener('change', function(ev){
-            app.settings.useCTRL = ev.target.checked;
-            
-            chrome.runtime.sendMessage({method: "updateLocalStorage", extra: app.settings});
-        });
-
-        chkSHIFT.addEventListener('change', function(ev){
-            app.settings.useSHIFT = ev.target.checked;
-            
-            chrome.runtime.sendMessage({method: "updateLocalStorage", extra: app.settings});
-        });
-
-        color.addEventListener('change', function(ev){
+        color.addEventListener('change', function (ev) {
             app.settings.colour = ev.target.value;
-            
-            chrome.runtime.sendMessage({method: "updateLocalStorage", extra: app.settings});
         });
 
-        opacity.addEventListener('change', function(ev){
+        opacity.addEventListener('change', function (ev) {
             app.settings.shadow = ev.target.value;
-            
-            chrome.runtime.sendMessage({method: "updateLocalStorage", extra: app.settings});
         });
     }
 };
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     app.init();
 });
